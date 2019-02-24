@@ -60,7 +60,13 @@ How might you use ADTs to enforce this invariant on street names?
 unit tests, see http://tiny.cc/lab6-1 for our solution.)
 ......................................................................*)
 
-type residence = NotImplemented ;;
+
+type street = Stephansplatz | Stiftgasse | MassAve | MainStreet ;;
+
+type address = {mailbox : int; street : street; zip_code : string} ;;
+
+type residence = House of Address | Apartment of int * address ;;
+
 
 (* After implementing the residence type, please compare with our type
 definition at http://tiny.cc/lab6-1. Consider the tradeoffs we may
@@ -68,7 +74,7 @@ have considered if you find our definition differs from your own.
 
 To compile against our unit tests, please change your definition to
 match ours.  You may comment out your original type definition if you
-would like to keep it. 
+would like to keep it.
 
 Valid zip codes in Camlville are given as five digits. For example,
 12345, 63130, and 02138 are valid zipcodes, but -0004, 2138, and F69A
@@ -87,7 +93,11 @@ as non-base-10 numbers. For example, "0x100" (hexadecimal) may or may
 not pass your test but "abcde" definitely should not.
 ......................................................................*)
 
-let valid_zip = fun _ -> failwith "valid_zip not implemented" ;;
+let valid_zip (zip : string) : bool =
+  String.length zip = 5
+  && match int_of_string_opt zip with
+    | None -> false
+    | Some x -> x >= 0 ;;
 
 (*......................................................................
 Exercise 3: Define a function, valid_residence, that enforces proper
@@ -95,8 +105,12 @@ zipcodes, and mailbox and unit numbers above 0. It should return true
 if it is valid and false otherwise.
 ......................................................................*)
 
-let valid_residence =
-  fun _ -> failwith "valid_residence not implemented" ;;
+let valid_residence (res : residence) : bool =
+  let valid_address ({mailbox; street; zip_code} : address) : bool =
+    valid_zip zip_code && mailbox > 0 in
+  match res with
+  | House addr -> valid_address addr
+  | Apartment(apt_unit, addr) -> valid_address addr && apt_unit > 0 ;;
 
 (*......................................................................
 Exercise 4: Time to get neighborly. Define a function that takes two
@@ -110,7 +124,7 @@ neighbor.
 
 let neighbors (place1 : residence) (place2 : residence) : bool =
   failwith "neighbors not implemented" ;;
-     
+
 (*......................................................................
 Exercise 5: Lucky 7
 
@@ -124,7 +138,7 @@ preferences.
 ......................................................................*)
 let close_to_seven (r1 : residence) (r2 : residence) : residence =
   failwith "close_to_seven not implemented" ;;
-     
+
 (*......................................................................
 Exercise 6: Bob has recently gotten a raise, so now he has a whole
 list of residences to choose from. He has the same preferences,
@@ -172,7 +186,7 @@ defined above, and return a bool. Return a
 Failure exception in the event that one of Bob's coworkers
 does not appear in his list of records.
 ......................................................................*)
-   
+
 let named_neighbors =
   fun _ -> failwith "neighbors2 not implemented" ;;
 
@@ -213,7 +227,7 @@ returns true if value is stored at some node in the tree and false
 otherwise.
 ......................................................................*)
 let find = fun _ -> failwith "find not implemented" ;;
-     
+
 (*......................................................................
 Exercise 12: Define a function "min_value", such that "min_value tree"
 returns the minimum value stored in a tree as an option type, and None
