@@ -61,11 +61,17 @@ unit tests, see http://tiny.cc/lab6-1 for our solution.)
 ......................................................................*)
 
 
-type street = Stephansplatz | Stiftgasse | MassAve | MainStreet ;;
+type street =
+  | Stephansplatz
+  | Stiftgasse
+  | MassAve
+  | MainStreet ;;
 
 type address = {mailbox : int; street : street; zip_code : string} ;;
 
-type residence = House of Address | Apartment of int * address ;;
+type residence =
+  | House of address
+  | Apartment of int * address ;;
 
 
 (* After implementing the residence type, please compare with our type
