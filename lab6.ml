@@ -166,7 +166,12 @@ there are no houses on Bob's list. For that reason, you should return
 a residence option type.
 ......................................................................*)
 let choose_residence =
-  fun _ -> failwith "choose_residence not implemented" ;;
+  let compare_res (best_choice : residence option) (curr_option : residence)
+    : residence option =
+    match best_choice with
+    | None -> Some curr_option
+    | Some best -> Some (close_to_seven best curr_option) in
+  List.fold_left compare_res None ;;
 (*......................................................................
 Exercise 7: When buyers purchase a new residence in Camlville, they
 must register the street name and address with the town hall, which
