@@ -122,8 +122,14 @@ Note: By this definition, a residence is considered to be its own
 neighbor.
 ......................................................................*)
 
+let extract_address (r : residence) : address =
+  match r with
+  | House addr
+  | Apartment(_, addr) -> addr ;;
+
 let neighbors (place1 : residence) (place2 : residence) : bool =
-  failwith "neighbors not implemented" ;;
+  let addr1, addr2 = extract_address place1, extract_address place2 in
+  addr1.street = addr2.street && addr1.zip_code = addr2.zip_code ;;
 
 (*......................................................................
 Exercise 5: Lucky 7
@@ -137,7 +143,9 @@ residence he will pick. If the two street numbers are equidistant from
 preferences.
 ......................................................................*)
 let close_to_seven (r1 : residence) (r2 : residence) : residence =
-  failwith "close_to_seven not implemented" ;;
+  let addr1, addr2 = extract_address r1, extract_address r2 in
+  if abs (addr1.mailbox - 7) <= abs (addr2.mailbox - 7) then r1
+  else r2 ;;
 
 (*......................................................................
 Exercise 6: Bob has recently gotten a raise, so now he has a whole
